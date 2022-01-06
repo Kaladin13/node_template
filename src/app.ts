@@ -44,10 +44,10 @@ createConnection().then(async connection => {
     })
 
 
-    const cont = new UserController();
+    const userController = new UserController();
 
     app.post('/us', async (req, res) => {
-        await cont.createUser(req, res);
+        await userController.createUser(req, res);
     });
 
     server.listen(PORT, () => {
