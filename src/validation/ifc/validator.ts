@@ -1,5 +1,5 @@
 
 export interface Validator<T> {
 
-    validate(t: T) : T | undefined;
+    validate(t: T) : boolean;
 }

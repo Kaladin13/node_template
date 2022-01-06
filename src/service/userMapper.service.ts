@@ -8,12 +8,11 @@ class UserMapperService implements Mapper<UserDtoModel, UserModel>{
     private userValidator = new UserDtoValidator();
 
     toDto(model: UserModel): UserDtoModel {
-        return {login: model.login};
+        return {login: model.login, password: model.password};
     }
 
     fromDto(dto: UserDtoModel): UserModel | undefined {
-        const validDto = this.userValidator.validate(dto);
-        if (validDto) {
+        if (this.userValidator.validate(dto)) {
             return { login: dto.login, password: dto.password};
         }
         return undefined;

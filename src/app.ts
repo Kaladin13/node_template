@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 import {UserController} from "./controller/user.controller";
 
 const PORT: number = 10000;
+
+// save cookies for 1000 days
 const timeToSave: number = 60 * 60 * 24 * 1000;
 
 const app: express.Application = express();
