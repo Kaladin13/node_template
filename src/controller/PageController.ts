@@ -8,12 +8,14 @@ export class PageController {
 
     async accessPersonalPage(req: express.Request, res: express.Response) {
 
+        // need to send personal page here
         res.send("Personal page!!!");
     }
 
     async checkPersonalCookies(req: express.Request, res: express.Response, next: NextFunction) {
 
         let checkCookieStatus = await this.pageService.checkCookies(req);
+
         let {status, message} = checkCookieStatus;
         console.log({"status": CookieStatuses[status], "message": message});
 
@@ -25,6 +27,8 @@ export class PageController {
         }
 
         if (checkCookieStatus.status == CookieStatuses.BadCookie) {
+
+            // bad cookie, maybe redirect to some other page later
             return res.status(403).json(checkCookieStatus);
         }
 

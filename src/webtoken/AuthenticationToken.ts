@@ -25,6 +25,7 @@ export class AuthenticationToken {
 
     // save cookies for 1000 days
     private static _timeToSaveCookies: number = 60 * 60 * 24 * 1000;
+    // commented for easier testing
     //private privateKey = uuidv4().toString();
     private privateKey = "fa15859e-f5b4-42b7-ae77-653d842fec67";
     private jwt = require('jsonwebtoken');
