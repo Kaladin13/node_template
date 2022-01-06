@@ -43,11 +43,16 @@ createConnection().then(async connection => {
         res.status(200).send('Okay');
     })
 
-
+    // pass connection object here to configure
+    // multiple databases
     const userController = new UserController();
 
-    app.post('/us', async (req, res) => {
+    app.post('/reg', async (req, res) => {
         await userController.createUser(req, res);
+    });
+
+    app.post('/auth', async (req, res ) => {
+        await userController.loginUser(req,res);
     });
 
     server.listen(PORT, () => {

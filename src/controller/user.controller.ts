@@ -9,10 +9,15 @@ export class UserController {
         let outMessage: object =  await this.userService.regNewUser(req.body);
         console.log(outMessage);
 
-        if (outMessage["status"] == "fail"){
-            return res.status(400).json(outMessage);
-        }
-        return res.status(200).json(outMessage);
+        res.status(200).json(outMessage);
+    }
+
+    async loginUser(req: express.Request, res: express.Response) {
+
+        let outMessage: object =  await this.userService.authenticateUser(req.body);
+        console.log(outMessage);
+
+        res.status(200).json(outMessage);
     }
 
     private userService : UserService = new UserService();

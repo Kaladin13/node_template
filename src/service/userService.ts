@@ -9,7 +9,7 @@ export class UserService {
     async regNewUser(requestBody): Promise<object> {
 
         if (!this.userValidator.validate(requestBody)) {
-            return {"status": "fail", "message": "Invalid request"};
+            return {"status": "bad request", "message": "Invalid request"};
         }
 
         if (await this.userRepository.findUserByLogin(requestBody.login) != null) {
@@ -22,6 +22,25 @@ export class UserService {
         await this.userRepository.addUser(user);
         return {"status": "ok", "message": user};
 
+    }
+
+    async authenticateUser(requestBody): Promise<object> {
+
+        if (!this.userValidator.validate(requestBody)) {
+            return {"status": "bad request", "message": "Invalid request"};
+        }
+
+        let user: User = await this.userRepository.findUserByLogin(requestBody.login);
+
+        if (user == null) {
+            return {"status": "fail", "message": "User with such login doesn't exist"};
+        }
+
+        if (user.password != requestBody.password) {
+            return {"status": "fail", "message": "Wrong password"};
+        }
+
+        return {"status": "ok", "message": user};
     }
 
     private userRepository: UserRepository = getCustomRepository(UserRepository);

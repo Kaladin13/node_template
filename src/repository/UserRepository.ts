@@ -23,8 +23,6 @@ export class UserRepository extends Repository<User>{
         return foundUser;
     }
 
-
-
     async addUser(user: User): Promise<void> {
         await this.insert(user);
     }
