@@ -43,9 +43,12 @@ createConnection().then(async connection => {
         res.status(200).send('Okay');
     })
 
+
     const cont = new UserController();
 
-    app.post('/us', cont.createUser);
+    app.post('/us', async (req, res) => {
+        await cont.createUser(req, res);
+    });
 
     server.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`)

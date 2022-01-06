@@ -1,6 +1,7 @@
 
 
-export interface UserDtoModel {
+export class UserDtoModel {
+    id: number;
     login: string;
-    password?: string;
+    password: string;
 }
