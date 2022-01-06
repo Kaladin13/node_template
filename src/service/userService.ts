@@ -2,6 +2,7 @@ import {UserRepository} from "../repository/UserRepository";
 import {getCustomRepository} from "typeorm";
 import {UserValidator} from "../validation/impl/userValidator";
 import {User} from "../entity/User";
+import {AuthenticationToken} from "../webtoken/AuthenticationToken";
 
 
 export class UserService {
@@ -40,9 +41,12 @@ export class UserService {
             return {"status": "fail", "message": "Wrong password"};
         }
 
-        return {"status": "ok", "message": user};
+        let accessToken = await this.authenticationToken.generateAccessToken(user);
+
+        return {"status": "ok", "message": user, "token": accessToken};
     }
 
+    private authenticationToken: AuthenticationToken = new AuthenticationToken();
     private userRepository: UserRepository = getCustomRepository(UserRepository);
     private userValidator: UserValidator = new UserValidator();
 }

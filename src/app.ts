@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import * as http from 'http';
-import express from 'express';
+import express, {NextFunction} from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import {v4 as uuidv4} from 'uuid';
@@ -8,13 +8,12 @@ import cookieParser from 'cookie-parser';
 
 import {UserController} from "./controller/user.controller";
 import {createConnection} from "typeorm";
+import {AuthenticationToken} from "./webtoken/AuthenticationToken";
+import {PageController} from "./controller/PageController";
 
 createConnection().then(async connection => {
 
     const PORT: number = 10000;
-
-// save cookies for 1000 days
-    const timeToSave: number = 60 * 60 * 24 * 1000;
 
     const app: express.Application = express();
     const server: http.Server = http.createServer(app);
@@ -22,9 +21,10 @@ createConnection().then(async connection => {
     app.use(session({
         secret: uuidv4().toString(),
         saveUninitialized: true,
-        cookie: {maxAge: timeToSave},
+        cookie: {maxAge: AuthenticationToken.timeToSaveCookies},
         resave: false
     }));
+
     app.use(cookieParser());
 
 //enable cors-policy
@@ -45,14 +45,23 @@ createConnection().then(async connection => {
 
     // pass connection object here to configure
     // multiple databases
-    const userController = new UserController();
+    const userController: UserController = new UserController();
+
+    const pageController: PageController = new PageController();
 
     app.post('/reg', async (req, res) => {
         await userController.createUser(req, res);
     });
 
-    app.post('/auth', async (req, res ) => {
+    app.post('/login', async (req, res ) => {
         await userController.loginUser(req,res);
+    });
+
+    app.get('/user/:id', async (req , res, next) =>{
+        await pageController.checkPersonalCookies(req, res, next);
+    },
+        async (req: express.Request, res: express.Response) =>{
+            await pageController.accessPersonalPage(req, res);
     });
 
     server.listen(PORT, () => {
