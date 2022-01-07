@@ -4,6 +4,7 @@ import {CookieStatuses} from "../service/CookieStatuses";
 import path from "path";
 import {RESOURCE_PATH} from "../property/ConstantValues";
 import {StatusCodes} from "http-status-codes";
+import {Logger} from "../logging/Logger";
 
 
 export class PageController {
@@ -19,7 +20,8 @@ export class PageController {
         const checkCookieStatus = await this.pageService.checkCookies(req);
 
         const {status, message} = checkCookieStatus;
-        console.log({"status": CookieStatuses[status], "message": message});
+        //console.log({"status": CookieStatuses[status], "message": message});
+        Logger.info("Got request", {additional: {"status": CookieStatuses[status], "message": message}})
 
         if (checkCookieStatus.status == CookieStatuses.NoCookie) {
 

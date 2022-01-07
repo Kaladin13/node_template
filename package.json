@@ -1,5 +1,5 @@
 {
-  "name": "expreg",
+  "name": "node_template_project",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "start": "tsc && node build/app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "kaladin",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.13",
@@ -29,6 +29,7 @@
     "postgres": "^1.0.2",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.4.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "winston": "^3.3.3"
   }
 }

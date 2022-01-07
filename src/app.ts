@@ -11,6 +11,7 @@ import {createConnection} from "typeorm";
 import {PageController} from "./controller/PageController";
 import {PORT, TIME_TO_SAVE_COOKIES} from "./property/ConstantValues";
 import {StatusCodes} from "http-status-codes";
+import {Logger} from "./logging/Logger";
 
 createConnection().then(async connection => {
 
@@ -40,6 +41,7 @@ createConnection().then(async connection => {
 
     const pageController: PageController = new PageController();
 
+
     app.post('/reg', async (req: express.Request, res: express.Response) => {
         await userController.createUser(req, res);
     });
@@ -56,7 +58,7 @@ createConnection().then(async connection => {
         });
 
     server.listen(PORT, () => {
-        console.log(`Server started on port ${PORT}`)
+        Logger.info("Server successfully started on port %s", PORT);
     })
 
-}).catch(error => console.log("TypeORM connection error with database: ", error));
+}).catch(error => Logger.error(new Error(error)));
