@@ -34,14 +34,6 @@ createConnection().then(async connection => {
     app.use(express.urlencoded({extended: true}));
 
 
-    app.get('/', (req: express.Request, res: express.Response): void => {
-        console.log(req.session);
-        if (req.session.id) {
-            console.log(`Success ${req.session.id}`)
-        }
-        res.status(StatusCodes.OK).send('Okay');
-    })
-
     // pass connection object here to configure
     // multiple databases
     const userController: UserController = new UserController();
