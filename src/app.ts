@@ -10,7 +10,6 @@ import {UserController} from "./controller/UserController";
 import {createConnection} from "typeorm";
 import {PageController} from "./controller/PageController";
 import {PORT, TIME_TO_SAVE_COOKIES} from "./property/ConstantValues";
-import {StatusCodes} from "http-status-codes";
 import {Logger} from "./logging/Logger";
 
 createConnection().then(async connection => {

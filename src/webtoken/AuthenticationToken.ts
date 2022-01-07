@@ -2,12 +2,12 @@ import {User} from "../entity/User";
 import {v4 as uuidv4} from 'uuid';
 import jwt from 'jsonwebtoken'
 import {TIME_TO_SAVE_COOKIES} from "../property/ConstantValues";
+import {Logger} from "../logging/Logger";
 
 export class AuthenticationToken {
 
 
     async generateAccessToken(user: User): Promise<string> {
-        console.log(this.privateKey);
         return await jwt.sign({user}, this.privateKey, {expiresIn: TIME_TO_SAVE_COOKIES});
     }
 
@@ -15,8 +15,7 @@ export class AuthenticationToken {
     async authenticateToken(token: string): Promise<object> | null {
         return jwt.verify(token, this.privateKey, async (err, user) => {
             if (err) {
-                // just bad cookie, no need for logging
-                // console.log(err);
+                Logger.error(new Error(err));
                 return null;
             }
             return user;
