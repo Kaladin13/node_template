@@ -6,21 +6,15 @@ import {EntityRepository, Repository} from "typeorm";
 export class UserRepository extends Repository<User>{
 
     async findUserByLogin(login_: string): Promise<User> {
-        let foundUser: User;
-        foundUser = await this.findOne({
+        return await this.findOne({
             where: {login: login_}
         })
-
-        return foundUser;
     }
 
     async findUserById(id_: number): Promise<User> {
-        let foundUser: User;
-        foundUser = await this.findOne({
+        return await this.findOne({
             where: {id: id_}
         })
-
-        return foundUser;
     }
 
     async addUser(user: User): Promise<void> {

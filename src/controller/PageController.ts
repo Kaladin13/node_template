@@ -36,7 +36,7 @@ export class PageController {
 
             //console.log(path.join(__dirname,"../../resources/Boar.png"));
             // return another user's page with articles
-            return res.sendFile(path.join(__dirname,"../../resources/Boar.png"));
+            return res.sendFile(path.join(__dirname,"../resources/Boar.png"));
         }
 
         if (checkCookieStatus.status == CookieStatuses.AccessCookie) {
