@@ -7,7 +7,7 @@ import {CookieStatuses} from "./CookieStatuses";
 
 export class PageService {
 
-    async checkCookies(req: express.Request) {
+    async fetchCookieStatus(req: express.Request) {
 
         const cookieToken = await req.cookies.token;
 

@@ -17,33 +17,34 @@ export class PageController {
 
     async checkPersonalCookies(req: express.Request, res: express.Response, next: NextFunction) {
 
-        const checkCookieStatus = await this.pageService.checkCookies(req);
+        // this function is fetching user's cookies, checking if jwt is present and valid
+        const receivedCookieStatus = await this.pageService.fetchCookieStatus(req);
 
-        const {status, message} = checkCookieStatus;
+        const {status, message} = receivedCookieStatus;
         //console.log({"status": CookieStatuses[status], "message": message});
         Logger.info("Got request", {additional: {"status": CookieStatuses[status], "message": message}})
 
-        if (checkCookieStatus.status == CookieStatuses.NoCookie) {
+        if (receivedCookieStatus.status == CookieStatuses.NoCookie) {
 
             // user has no cookie at all and trying to access personal page
             // of existing user, redirecting to /login page
             res.redirect(StatusCodes.TEMPORARY_REDIRECT, "/login");
         }
 
-        if (checkCookieStatus.status == CookieStatuses.BadCookie) {
+        if (receivedCookieStatus.status == CookieStatuses.BadCookie) {
 
             // bad cookie, maybe redirect to some other page later
-            return res.status(StatusCodes.FORBIDDEN).json(checkCookieStatus);
+            return res.status(StatusCodes.FORBIDDEN).json(receivedCookieStatus);
         }
 
-        if (checkCookieStatus.status == CookieStatuses.AnotherUserCookie) {
+        if (receivedCookieStatus.status == CookieStatuses.AnotherUserCookie) {
 
             //console.log(path.join(__dirname,"../../resources/Boar.png"));
             // return another user's page with articles
             return res.sendFile(path.join(__dirname, RESOURCE_PATH));
         }
 
-        if (checkCookieStatus.status == CookieStatuses.AccessCookie) {
+        if (receivedCookieStatus.status == CookieStatuses.AccessCookie) {
 
             // cookie is correct and matching this user id
             next();
