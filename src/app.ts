@@ -1,19 +1,18 @@
 import "reflect-metadata";
 import * as http from 'http';
-import express, {NextFunction} from 'express';
+import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import {v4 as uuidv4} from 'uuid';
 import cookieParser from 'cookie-parser';
 
-import {UserController} from "./controller/user.controller";
+import {UserController} from "./controller/UserController";
 import {createConnection} from "typeorm";
-import {AuthenticationToken} from "./webtoken/AuthenticationToken";
 import {PageController} from "./controller/PageController";
+import {PORT, TIME_TO_SAVE_COOKIES} from "./property/ConstantValues";
+import {StatusCodes} from "http-status-codes";
 
 createConnection().then(async connection => {
-
-    const PORT: number = 10000;
 
     const app: express.Application = express();
     const server: http.Server = http.createServer(app);
@@ -21,7 +20,7 @@ createConnection().then(async connection => {
     app.use(session({
         secret: uuidv4().toString(),
         saveUninitialized: true,
-        cookie: {maxAge: AuthenticationToken.timeToSaveCookies},
+        cookie: {maxAge: TIME_TO_SAVE_COOKIES},
         resave: false
     }));
 
@@ -40,7 +39,7 @@ createConnection().then(async connection => {
         if (req.session.id) {
             console.log(`Success ${req.session.id}`)
         }
-        res.status(200).send('Okay');
+        res.status(StatusCodes.OK).send('Okay');
     })
 
     // pass connection object here to configure
@@ -49,20 +48,20 @@ createConnection().then(async connection => {
 
     const pageController: PageController = new PageController();
 
-    app.post('/reg', async (req, res) => {
+    app.post('/reg', async (req: express.Request, res: express.Response) => {
         await userController.createUser(req, res);
     });
 
-    app.post('/login', async (req, res ) => {
-        await userController.loginUser(req,res);
+    app.post('/login', async (req: express.Request, res: express.Response) => {
+        await userController.loginUser(req, res);
     });
 
-    app.get('/user/:id', async (req , res, next) =>{
-        await pageController.checkPersonalCookies(req, res, next);
-    },
-        async (req: express.Request, res: express.Response) =>{
+    app.get('/user/:id', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            await pageController.checkPersonalCookies(req, res, next);
+        },
+        async (req: express.Request, res: express.Response) => {
             await pageController.accessPersonalPage(req, res);
-    });
+        });
 
     server.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`)

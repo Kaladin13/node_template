@@ -7,23 +7,24 @@ import {CookieStatuses} from "./CookieStatuses";
 
 export class PageService {
 
-    async checkCookies(request: express.Request) {
+    async checkCookies(req: express.Request) {
 
-        let cookieToken = await request.cookies.token;
+        const cookieToken = await req.cookies.token;
 
         if (cookieToken == null) {
             return {"status": CookieStatuses.NoCookie, "message": "No login cookies"};
         }
 
-        let decodedToken = await this.authenticationToken.authenticateToken(cookieToken);
-        let decodedUser = (decodedToken == null) ? null : decodedToken["user"];
+        const decodedToken = await this.authenticationToken.authenticateToken(cookieToken);
+        const decodedUser = (decodedToken == null) ? null : decodedToken["user"];
 
         if ((decodedUser == null) ||
             ((await this.userRepository.findUserByLogin(decodedUser.login)) == null)) {
+
             return {"status": CookieStatuses.BadCookie, "message": "Cookie is expired or invalid"}
         }
 
-        if (request.params.id != decodedUser.id.toString()) {
+        if (req.params.id != decodedUser.id.toString()) {
             return {
                 "status": CookieStatuses.AnotherUserCookie,
                 "message": "User trying to access page of another user"
