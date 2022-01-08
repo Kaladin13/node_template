@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import * as http from 'http';
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -40,6 +39,12 @@ createConnection().then(async connection => {
     const pageController: PageController = new PageController();
 
 
+    // middleware for all '/user/*' requests to parse cookies
+    app.use('/user', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        await pageController.middlewareParseCookies(req, res, next);
+    });
+
+
     app.post('/reg', async (req: express.Request, res: express.Response) => {
         await userController.createUser(req, res);
     });
@@ -48,11 +53,8 @@ createConnection().then(async connection => {
         await userController.loginUser(req, res);
     });
 
-    app.get('/user/:id', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            await pageController.checkPersonalCookies(req, res, next);
-        },
-        async (req: express.Request, res: express.Response) => {
-            await pageController.accessPersonalPage(req, res);
+    app.get('/user/:id', async (req: express.Request, res: express.Response) => {
+            await pageController.accessUserPage(req, res);
         });
 
     app.listen(PORT, () => {

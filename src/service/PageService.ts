@@ -4,11 +4,12 @@ import {UserRepository} from "../repository/UserRepository";
 import {getCustomRepository} from "typeorm";
 import {CookieStatuses} from "./StatusEnums/CookieStatuses";
 import {ResponseMapper} from "../mapper/ResponseMapper";
+import {User} from "../entity/User";
 
 
 export class PageService {
 
-    async fetchCookieStatus(req: express.Request): Promise<ResponseMapper> {
+    async parseCookie(req: express.Request): Promise<ResponseMapper> {
 
         const cookieToken = await req.cookies.token;
 
@@ -28,16 +29,22 @@ export class PageService {
                 "Cookie is expired or invalid");
         }
 
+        return new ResponseMapper(CookieStatuses.ValidCookie,
+            "Valid cookie of existing user",
+            decodedUser);
+    }
+
+    async fetchUserCookie(req: express.Request, decodedUser: User): Promise<ResponseMapper> {
+
         if (req.params.id != decodedUser.id.toString()) {
 
             return new ResponseMapper(CookieStatuses.AnotherUserCookie,
                 "User trying to access page of another user");
         }
 
-
         return new ResponseMapper(CookieStatuses.AccessCookie,
-            "User is accessing his page",
-            decodedUser);
+            "User is accessing his page");
+
     }
 
     private userRepository: UserRepository = getCustomRepository(UserRepository);
