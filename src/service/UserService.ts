@@ -3,11 +3,14 @@ import {getCustomRepository} from "typeorm";
 import {UserValidator} from "../validation/impl/UserValidator";
 import {User} from "../entity/User";
 import {AuthenticationToken} from "../webtoken/AuthenticationToken";
+import express from "express";
 
 
 export class UserService {
 
-    async regNewUser(reqBody: { login: string; password: string; }): Promise<object> {
+    async regNewUser(req: express.Request): Promise<object> {
+
+        const reqBody = req.body;
 
         if (!this.userValidator.validate(reqBody)) {
             return {"status": "bad request", "message": "Invalid request"};
@@ -26,7 +29,9 @@ export class UserService {
 
     }
 
-    async authenticateUser(reqBody: { login: string; password: string; }): Promise<object> {
+    async authenticateUser(req: express.Request): Promise<object> {
+
+        const reqBody = req.body;
 
         if (!this.userValidator.validate(reqBody)) {
             return {"status": "bad request", "message": "Invalid request"};

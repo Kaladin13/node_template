@@ -8,7 +8,7 @@ export class UserController {
 
     async createUser(req: express.Request, res: express.Response) {
 
-        const outMessage: object = await this.userService.regNewUser(req.body);
+        const outMessage: object = await this.userService.regNewUser(req);
         Logger.info("Got request",{additional: outMessage});
 
         res.status(StatusCodes.OK).json(outMessage);
@@ -17,7 +17,7 @@ export class UserController {
 
     async loginUser(req: express.Request, res: express.Response) {
 
-        const outMessage: object = await this.userService.authenticateUser(req.body);
+        const outMessage: object = await this.userService.authenticateUser(req);
         Logger.info("Got request",{additional: outMessage});
 
         if (outMessage["status"] == "ok") {

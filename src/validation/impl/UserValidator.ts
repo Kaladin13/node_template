@@ -9,12 +9,12 @@ import {
 
 export class UserValidator implements Validator<User> {
 
-    validate(reqBody: { login: any; password: any; }): boolean {
-        return reqBody.login && reqBody.password
-            && reqBody.password.length >= MIN_PASSWORD_LENGTH
-            && reqBody.password.length <= MAX_PASSWORD_LENGTH
-            && reqBody.login.length >= MIN_LOGIN_LENGTH
-            && reqBody.login.length <= MAX_LOGIN_LENGTH;
+    validate(user: User): boolean {
+        return user.login && user.password
+            && user.password.length >= MIN_PASSWORD_LENGTH
+            && user.password.length <= MAX_PASSWORD_LENGTH
+            && user.login.length >= MIN_LOGIN_LENGTH
+            && user.login.length <= MAX_LOGIN_LENGTH;
 
     }
 

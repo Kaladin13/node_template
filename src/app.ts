@@ -15,7 +15,6 @@ import {Logger} from "./logging/Logger";
 createConnection().then(async connection => {
 
     const app: express.Application = express();
-    const server: http.Server = http.createServer(app);
 
     app.use(session({
         secret: uuidv4().toString(),
@@ -56,7 +55,7 @@ createConnection().then(async connection => {
             await pageController.accessPersonalPage(req, res);
         });
 
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
         Logger.info("Server successfully started on port %s", PORT);
     })
 
