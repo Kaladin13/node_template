@@ -3,28 +3,33 @@ import express from 'express';
 import {UserService} from "../service/UserService";
 import {StatusCodes} from "http-status-codes";
 import {Logger} from "../logging/Logger";
+import {ResponseMapper} from "../mapper/ResponseMapper";
+import {ResponseStatuses} from "../service/StatusEnums/ResponseStatuses";
+import {logResponse} from "../logging/ResponseLogging";
 
 export class UserController {
 
     async createUser(req: express.Request, res: express.Response) {
 
-        const outMessage: object = await this.userService.regNewUser(req);
-        Logger.info("Got request",{additional: outMessage});
+        const responseMessage: ResponseMapper = await this.userService.regNewUser(req);
 
-        res.status(StatusCodes.OK).json(outMessage);
+        logResponse(responseMessage);
+
+        res.status(StatusCodes.OK).json(responseMessage);
     }
 
 
     async loginUser(req: express.Request, res: express.Response) {
 
-        const outMessage: object = await this.userService.authenticateUser(req);
-        Logger.info("Got request",{additional: outMessage});
+        const responseMapper: ResponseMapper = await this.userService.authenticateUser(req);
 
-        if (outMessage["status"] == "ok") {
-            res.cookie("token", outMessage["token"]);
+        logResponse(responseMapper);
+
+        if (responseMapper.status == ResponseStatuses.Ok) {
+            res.cookie("token", responseMapper.additional.token);
         }
 
-        return res.status(StatusCodes.OK).json(outMessage);
+        return res.status(StatusCodes.OK).json(responseMapper);
     }
 
 

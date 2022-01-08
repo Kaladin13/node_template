@@ -2,17 +2,20 @@ import {AuthenticationToken} from "../webtoken/AuthenticationToken";
 import express from "express";
 import {UserRepository} from "../repository/UserRepository";
 import {getCustomRepository} from "typeorm";
-import {CookieStatuses} from "./CookieStatuses";
+import {CookieStatuses} from "./StatusEnums/CookieStatuses";
+import {ResponseMapper} from "../mapper/ResponseMapper";
 
 
 export class PageService {
 
-    async fetchCookieStatus(req: express.Request) {
+    async fetchCookieStatus(req: express.Request): Promise<ResponseMapper> {
 
         const cookieToken = await req.cookies.token;
 
         if (cookieToken == null) {
-            return {"status": CookieStatuses.NoCookie, "message": "No login cookies"};
+
+            return new ResponseMapper(CookieStatuses.NoCookie,
+                "No login cookies");
         }
 
         const decodedToken = await this.authenticationToken.authenticateToken(cookieToken);
@@ -21,18 +24,20 @@ export class PageService {
         if ((decodedUser == null) ||
             ((await this.userRepository.findUserByLogin(decodedUser.login)) == null)) {
 
-            return {"status": CookieStatuses.BadCookie, "message": "Cookie is expired or invalid"}
+            return new ResponseMapper(CookieStatuses.BadCookie,
+                "Cookie is expired or invalid");
         }
 
         if (req.params.id != decodedUser.id.toString()) {
-            return {
-                "status": CookieStatuses.AnotherUserCookie,
-                "message": "User trying to access page of another user"
-            };
+
+            return new ResponseMapper(CookieStatuses.AnotherUserCookie,
+                "User trying to access page of another user");
         }
 
-        return {"status": CookieStatuses.AccessCookie, "message": decodedUser};
 
+        return new ResponseMapper(CookieStatuses.AccessCookie,
+            "User is accessing his page",
+            decodedUser);
     }
 
     private userRepository: UserRepository = getCustomRepository(UserRepository);

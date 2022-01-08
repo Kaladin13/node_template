@@ -1,10 +1,12 @@
 import {PageService} from "../service/PageService";
 import express, {NextFunction} from "express";
-import {CookieStatuses} from "../service/CookieStatuses";
+import {CookieStatuses} from "../service/StatusEnums/CookieStatuses";
 import path from "path";
 import {RESOURCE_PATH} from "../property/ConstantValues";
 import {StatusCodes} from "http-status-codes";
 import {Logger} from "../logging/Logger";
+import {ResponseMapper} from "../mapper/ResponseMapper";
+import {logResponse} from "../logging/ResponseLogging";
 
 
 export class PageController {
@@ -15,14 +17,13 @@ export class PageController {
         res.status(StatusCodes.OK).send("Personal page!!!");
     }
 
+
     async checkPersonalCookies(req: express.Request, res: express.Response, next: NextFunction) {
 
         // this function is fetching user's cookies, checking if jwt is present and valid
-        const receivedCookieStatus = await this.pageService.fetchCookieStatus(req);
+        const receivedCookieStatus: ResponseMapper = await this.pageService.fetchCookieStatus(req);
 
-        const {status, message} = receivedCookieStatus;
-        //console.log({"status": CookieStatuses[status], "message": message});
-        Logger.info("Got request", {additional: {"status": CookieStatuses[status], "message": message}})
+        logResponse(receivedCookieStatus);
 
         if (receivedCookieStatus.status == CookieStatuses.NoCookie) {
 
@@ -39,7 +40,6 @@ export class PageController {
 
         if (receivedCookieStatus.status == CookieStatuses.AnotherUserCookie) {
 
-            //console.log(path.join(__dirname,"../../resources/Boar.png"));
             // return another user's page with articles
             return res.sendFile(path.join(__dirname, RESOURCE_PATH));
         }
