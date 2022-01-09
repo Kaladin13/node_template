@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import {User} from "../entity/User";
 import {EntityRepository, Repository} from "typeorm";
 
+
 @EntityRepository(User)
 export class UserRepository extends Repository<User>{
 
@@ -20,5 +21,6 @@ export class UserRepository extends Repository<User>{
     async addUser(user: User): Promise<void> {
         await this.insert(user);
     }
+
 
 }

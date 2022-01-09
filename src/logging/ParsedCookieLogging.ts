@@ -1,4 +1,4 @@
-import {ResponseMapper} from "../mapper/ResponseMapper";
+import {ResponseMapper} from "../endpoints_handling/mapper/ResponseMapper";
 import {Logger} from "./Logger";
 
 

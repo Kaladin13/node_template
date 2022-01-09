@@ -4,7 +4,7 @@ import {UserService} from "../service/UserService";
 import {StatusCodes} from "http-status-codes";
 import {ResponseMapper} from "../mapper/ResponseMapper";
 import {ResponseStatuses} from "../service/StatusEnums/ResponseStatuses";
-import {logResponse} from "../logging/ResponseLogging";
+import {logResponse} from "../../logging/ResponseLogging";
 
 export class UserController {
 

@@ -1,6 +1,6 @@
 import express, {NextFunction} from "express";
 import {ResponseMapper} from "../mapper/ResponseMapper";
-import {logParsedCookie} from "../logging/ParsedCookieLogging";
+import {logParsedCookie} from "../../logging/ParsedCookieLogging";
 import {CookieStatuses} from "../service/StatusEnums/CookieStatuses";
 import {StatusCodes} from "http-status-codes";
 import {MiddlewareService} from "../service/MiddlewareService";

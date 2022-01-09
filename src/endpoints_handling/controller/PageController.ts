@@ -1,7 +1,7 @@
 import express from "express";
 import {CookieStatuses} from "../service/StatusEnums/CookieStatuses";
 import path from "path";
-import {RESOURCE_PATH} from "../property/ConstantValues";
+import {RESOURCE_PATH} from "../../property/ConstantValues";
 import {StatusCodes} from "http-status-codes";
 import {ResponseMapper} from "../mapper/ResponseMapper";
 

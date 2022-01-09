@@ -1,8 +1,8 @@
-import {User} from "../entity/User";
+import {User} from "../../database_handling/entity/User";
 import {v4 as uuidv4} from 'uuid';
 import jwt from 'jsonwebtoken'
-import {TIME_TO_SAVE_COOKIES} from "../property/ConstantValues";
-import {Logger} from "../logging/Logger";
+import {TIME_TO_SAVE_COOKIES} from "../../property/ConstantValues";
+import {Logger} from "../../logging/Logger";
 
 export class AuthenticationToken {
 

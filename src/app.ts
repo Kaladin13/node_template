@@ -5,14 +5,11 @@ import session from 'express-session';
 import {v4 as uuidv4} from 'uuid';
 import cookieParser from 'cookie-parser';
 
-import {UserController} from "./controller/UserController";
-import {createConnection} from "typeorm";
-import {PageController} from "./controller/PageController";
 import {PORT, TIME_TO_SAVE_COOKIES} from "./property/ConstantValues";
 import {Logger} from "./logging/Logger";
-import {MiddlewareController} from "./controller/MiddlewareController";
+import {router} from "./routes/Routes";
 
-createConnection().then(async connection => {
+
 
     const app: express.Application = express();
 
@@ -32,36 +29,11 @@ createConnection().then(async connection => {
     app.use(express.json());
     app.use(express.urlencoded({extended: true}));
 
-
-    // pass connection object here to configure
-    // multiple databases
-    const userController: UserController = new UserController();
-
-    const pageController: PageController = new PageController();
-
-    const middlewareController: MiddlewareController = new MiddlewareController();
-
-    // middleware for all '/user/*' requests to parse cookies
-    app.param('id', async (req: express.Request, res: express.Response, next: express.NextFunction, id: number) => {
-        await middlewareController.middlewareParseCookies(req, res, next, id);
-    });
-
-
-    app.post('/reg', async (req: express.Request, res: express.Response) => {
-        await userController.createUser(req, res);
-    });
-
-    app.post('/login', async (req: express.Request, res: express.Response) => {
-        await userController.loginUser(req, res);
-    });
-
-    app.get('/user/:id', async (req: express.Request, res: express.Response) => {
-        await pageController.accessUserPage(req, res);
-    });
-
+    // routes are configured in routing directory,
+    // just exporting them here
+    app.use(router);
 
     app.listen(PORT, () => {
         Logger.info("Server successfully started on port %s", PORT);
     })
 
-}).catch(error => Logger.error(new Error(error)));

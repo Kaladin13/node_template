@@ -1,10 +1,10 @@
 import {AuthenticationToken} from "../webtoken/AuthenticationToken";
 import express from "express";
-import {UserRepository} from "../repository/UserRepository";
+import {UserRepository} from "../../database_handling/repository/UserRepository";
 import {getCustomRepository} from "typeorm";
 import {CookieStatuses} from "./StatusEnums/CookieStatuses";
 import {ResponseMapper} from "../mapper/ResponseMapper";
-import {User} from "../entity/User";
+import {User} from "../../database_handling/entity/User";
 
 
 export class MiddlewareService {

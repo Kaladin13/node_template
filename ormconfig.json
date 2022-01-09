@@ -9,6 +9,6 @@
    "synchronize": true,
    "logging": false,
    "entities": [
-      "build/entity/*.js"
+      "build/database_handling/entity/*.js"
    ]
 }

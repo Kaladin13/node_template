@@ -1,6 +1,6 @@
 
 
-export const RESOURCE_PATH: string = "../resources/Boar.png";
+export const RESOURCE_PATH: string = "../../resources/Boar.png";
 
 // save cookies for 1000 days
 export const TIME_TO_SAVE_COOKIES: number = 60 * 60 * 24 * 1000;
