@@ -10,6 +10,7 @@ import {createConnection} from "typeorm";
 import {PageController} from "./controller/PageController";
 import {PORT, TIME_TO_SAVE_COOKIES} from "./property/ConstantValues";
 import {Logger} from "./logging/Logger";
+import {MiddlewareController} from "./controller/MiddlewareController";
 
 createConnection().then(async connection => {
 
@@ -38,10 +39,11 @@ createConnection().then(async connection => {
 
     const pageController: PageController = new PageController();
 
+    const middlewareController: MiddlewareController = new MiddlewareController();
 
     // middleware for all '/user/*' requests to parse cookies
     app.param('id', async (req: express.Request, res: express.Response, next: express.NextFunction, id: number) => {
-        await pageController.middlewareParseCookies(req, res, next, id);
+        await middlewareController.middlewareParseCookies(req, res, next, id);
     });
 
 

@@ -1,11 +1,9 @@
-import {PageService} from "../service/PageService";
-import express, {NextFunction} from "express";
+import express from "express";
 import {CookieStatuses} from "../service/StatusEnums/CookieStatuses";
 import path from "path";
 import {RESOURCE_PATH} from "../property/ConstantValues";
 import {StatusCodes} from "http-status-codes";
 import {ResponseMapper} from "../mapper/ResponseMapper";
-import {logParsedCookie} from "../logging/ParsedCookieLogging";
 
 
 export class PageController {
@@ -33,25 +31,4 @@ export class PageController {
     }
 
 
-    async middlewareParseCookies(req: express.Request, res: express.Response, next: NextFunction, id: number) {
-
-        // this function is parsing user's cookies, checking if jwt is present and valid
-        const receivedCookieStatus: ResponseMapper = await this.pageService.parseCookie(req, id);
-
-        logParsedCookie(receivedCookieStatus);
-
-        if (receivedCookieStatus.status == CookieStatuses.BadCookie) {
-
-            // bad cookie, maybe redirect to some other page later
-            return res.status(StatusCodes.FORBIDDEN).json(receivedCookieStatus);
-        }
-
-        res.locals.parsedCookie = receivedCookieStatus;
-
-        // we are delegating fetch logic to next function, here in middleware
-        // we only parse cookie token and check invalid cookie
-        next();
-    }
-
-    private pageService: PageService = new PageService();
 }

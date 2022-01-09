@@ -7,7 +7,7 @@ import {ResponseMapper} from "../mapper/ResponseMapper";
 import {User} from "../entity/User";
 
 
-export class PageService {
+export class MiddlewareService {
 
     async parseCookie(req: express.Request, id: number): Promise<ResponseMapper> {
 
@@ -20,7 +20,7 @@ export class PageService {
         }
 
         const decodedToken = await this.authenticationToken.authenticateToken(cookieToken);
-        const decodedUser = (decodedToken == null) ? null : decodedToken["user"];
+        const decodedUser: User = (decodedToken == null) ? null : decodedToken["user"];
 
         if ((decodedUser == null) ||
             ((await this.userRepository.findUserByLogin(decodedUser.login)) == null)) {
@@ -29,7 +29,7 @@ export class PageService {
                 "Cookie is expired or invalid");
         }
 
-        if (id != decodedUser.id.toString()) {
+        if (id != decodedUser.id) {
 
             return new ResponseMapper(CookieStatuses.AnotherUserCookie,
                 "User trying to access page of another user",
