@@ -1,7 +1,7 @@
 import express, {NextFunction} from "express";
 import {ResponseMapper} from "../mapper/ResponseMapper";
 import {logParsedCookie} from "../../logging/ParsedCookieLogging";
-import {CookieStatuses} from "../service/StatusEnums/CookieStatuses";
+import {MiddlewareStatuses} from "../service/StatusEnums/MiddlewareStatuses";
 import {StatusCodes} from "http-status-codes";
 import {MiddlewareService} from "../service/MiddlewareService";
 
@@ -15,10 +15,15 @@ export class MiddlewareController {
 
         logParsedCookie(receivedCookieStatus);
 
-        if (receivedCookieStatus.status == CookieStatuses.BadCookie) {
+        if (receivedCookieStatus.status == MiddlewareStatuses.BadCookie) {
 
             // bad cookie, maybe redirect to some other page later
             return res.status(StatusCodes.FORBIDDEN).json(receivedCookieStatus);
+        }
+
+        if (receivedCookieStatus.status == MiddlewareStatuses.InvalidId) {
+
+            return res.status(StatusCodes.NOT_FOUND).json(receivedCookieStatus);
         }
 
         res.locals.parsedCookie = receivedCookieStatus;

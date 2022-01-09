@@ -2,7 +2,7 @@ import {AuthenticationToken} from "../webtoken/AuthenticationToken";
 import express from "express";
 import {UserRepository} from "../../database_handling/repository/UserRepository";
 import {getCustomRepository} from "typeorm";
-import {CookieStatuses} from "./StatusEnums/CookieStatuses";
+import {MiddlewareStatuses} from "./StatusEnums/MiddlewareStatuses";
 import {ResponseMapper} from "../mapper/ResponseMapper";
 import {User} from "../../database_handling/entity/User";
 
@@ -15,8 +15,14 @@ export class MiddlewareService {
 
         if (cookieToken == null) {
 
-            return new ResponseMapper(CookieStatuses.NoCookie,
+            return new ResponseMapper(MiddlewareStatuses.NoCookie,
                 "No login cookies");
+        }
+
+        if (await this.userRepository.findUserById(id) == null) {
+
+            return new ResponseMapper(MiddlewareStatuses.InvalidId,
+                "There is no user with such id");
         }
 
         const decodedToken = await this.authenticationToken.authenticateToken(cookieToken);
@@ -25,18 +31,18 @@ export class MiddlewareService {
         if ((decodedUser == null) ||
             ((await this.userRepository.findUserByLogin(decodedUser.login)) == null)) {
 
-            return new ResponseMapper(CookieStatuses.BadCookie,
+            return new ResponseMapper(MiddlewareStatuses.BadCookie,
                 "Cookie is expired or invalid");
         }
 
         if (id != decodedUser.id) {
 
-            return new ResponseMapper(CookieStatuses.AnotherUserCookie,
+            return new ResponseMapper(MiddlewareStatuses.AnotherUserCookie,
                 "User trying to access page of another user",
                 decodedUser);
         }
 
-        return new ResponseMapper(CookieStatuses.AccessCookie,
+        return new ResponseMapper(MiddlewareStatuses.AccessCookie,
             "User is accessing his page",
             decodedUser);
 

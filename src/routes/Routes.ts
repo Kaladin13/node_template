@@ -26,9 +26,11 @@ router.post('/reg', async (req: express.Request, res: express.Response) => {
     await userController.createUser(req, res);
 });
 
+
 router.post('/login', async (req: express.Request, res: express.Response) => {
     await userController.loginUser(req, res);
 });
+
 
 router.get('/user/:id', async (req: express.Request, res: express.Response) => {
     await pageController.accessUserPage(req, res);
