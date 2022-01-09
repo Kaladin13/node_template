@@ -9,7 +9,7 @@ import {User} from "../entity/User";
 
 export class PageService {
 
-    async parseCookie(req: express.Request): Promise<ResponseMapper> {
+    async parseCookie(req: express.Request, id: number): Promise<ResponseMapper> {
 
         const cookieToken = await req.cookies.token;
 
@@ -29,23 +29,19 @@ export class PageService {
                 "Cookie is expired or invalid");
         }
 
-        return new ResponseMapper(CookieStatuses.ValidCookie,
-            "Valid cookie of existing user",
-            decodedUser);
-    }
-
-    async fetchUserCookie(req: express.Request, decodedUser: User): Promise<ResponseMapper> {
-
-        if (req.params.id != decodedUser.id.toString()) {
+        if (id != decodedUser.id.toString()) {
 
             return new ResponseMapper(CookieStatuses.AnotherUserCookie,
-                "User trying to access page of another user");
+                "User trying to access page of another user",
+                decodedUser);
         }
 
         return new ResponseMapper(CookieStatuses.AccessCookie,
-            "User is accessing his page");
+            "User is accessing his page",
+            decodedUser);
 
     }
+
 
     private userRepository: UserRepository = getCustomRepository(UserRepository);
     private authenticationToken: AuthenticationToken = new AuthenticationToken();

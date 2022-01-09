@@ -9,17 +9,19 @@ export class ResponseMapper {
         this.responseAdditional = responseAdditional;
     }
 
-    get message() {
-        return this.responseMessage;
-    }
 
     get status() {
         return this.responseStatus;
     }
 
+    get message() {
+        return this.responseMessage;
+    }
+
     get additional() {
         return this.responseAdditional;
     }
+
 
     private readonly responseStatus: any;
     private readonly responseMessage: string;

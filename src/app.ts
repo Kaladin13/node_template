@@ -40,8 +40,8 @@ createConnection().then(async connection => {
 
 
     // middleware for all '/user/*' requests to parse cookies
-    app.use('/user', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-        await pageController.middlewareParseCookies(req, res, next);
+    app.param('id', async (req: express.Request, res: express.Response, next: express.NextFunction, id: number) => {
+        await pageController.middlewareParseCookies(req, res, next, id);
     });
 
 
@@ -54,8 +54,9 @@ createConnection().then(async connection => {
     });
 
     app.get('/user/:id', async (req: express.Request, res: express.Response) => {
-            await pageController.accessUserPage(req, res);
-        });
+        await pageController.accessUserPage(req, res);
+    });
+
 
     app.listen(PORT, () => {
         Logger.info("Server successfully started on port %s", PORT);
